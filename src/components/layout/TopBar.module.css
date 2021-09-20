@@ -1,0 +1,12 @@
+.topnav {
+    height: 30px; 
+    width: 100%; 
+    position: fixed; 
+    z-index: 1; 
+    top: 0;
+    left: 0;
+    background-color: #12141A; 
+    overflow-x: hidden; 
+    margin-right: 30px;
+    padding: 15px 0px 15px 30px;
+  }
