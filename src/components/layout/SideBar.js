@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import classes from './SideBar.module.css'
 import {IoHomeSharp} from 'react-icons/io5'
@@ -9,15 +9,27 @@ function SideBar(){
 
     return (
         <div class={classes.sidenav}>
-            <Link to="/">
+            <NavLink exact to="/"
+            activeStyle={{
+                fontWeight: "bold",
+                color: "#171717"
+              }}>
                 <IoHomeSharp />
-            </Link>
-            <Link to="/">
-                <IoAddOutline />
-            </Link>
-            <Link to="/">
+            </NavLink>
+            <NavLink to="/new"
+            activeStyle={{
+                fontWeight: "bold",
+                color: "#171717"
+              }}>
+                <IoAddOutline />    
+            </NavLink>
+            <NavLink to="/list"
+            activeStyle={{
+                fontWeight: "bold",
+                color: "#171717"
+              }}>
                 <IoList />
-            </Link>
+            </NavLink>
         </div>
     )
 }

@@ -1,0 +1,6 @@
+.main_content_container{
+    display: flex;
+    max-width: 100%;
+    justify-content: start;
+    flex-wrap: wrap;
+}

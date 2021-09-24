@@ -1,12 +1,39 @@
 .topnav {
-    height: 30px; 
-    width: 100%; 
+    height: 40px; 
+    width: calc(100% - 150px); 
     position: fixed; 
     z-index: 1; 
     top: 0;
     left: 0;
-    background-color: #12141A; 
+    opacity: 0px;
+
     overflow-x: hidden; 
-    margin-right: 30px;
-    padding: 15px 0px 15px 30px;
+    padding: 15px 0px 15px 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: x-large;
+    overflow: hidden;
   }
+
+.topnav svg{
+  color:rgb(175, 201, 188);
+  transition: all 400ms;
+}
+.topnav svg:hover{
+  transform: rotate(180deg);
+  cursor: pointer;
+}
+
+.topnav p{
+  font-size: 12px;
+}
+
+.topnav .right__content{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 200px;
+  font-weight: bolder;
+  color:white;
+}

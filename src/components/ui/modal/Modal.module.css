@@ -1,0 +1,29 @@
+.modal_container {
+    background-color: #171717;
+    color: #363636;
+    font-weight: bold;
+    padding: 10px 15px 10px 15px;
+    min-width: 10px;
+    border-radius: 5px;
+    border-left: 2px solid #6456B7;
+    box-shadow: 4px 4px 5px 1px rgba(0,0,0,0.5);
+    margin: 15% auto;
+    width: 50%; 
+}
+
+.modal_background{
+   width: 100vw;
+   height: 100vh;
+   background-color: rgba(0,0,0,0.3);
+   position: fixed;
+   z-index: 1;
+   top: 0;
+   left: 0;
+   overflow: auto;
+
+}
+
+.anim {
+   transition: all 500ms;
+   opacity: 0;
+}

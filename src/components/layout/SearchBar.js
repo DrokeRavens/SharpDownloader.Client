@@ -5,7 +5,7 @@ function SearchBar(){
     return <>
         <div>
             <form>
-                <div className="input-container">
+                <div className={classes.input_container}>
                     <input type="text" name="name" placeholder="Search..." />
                     <button type="submit">
                         <IoIosSearch />
