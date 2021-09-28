@@ -1,0 +1,6 @@
+.playpause_container:hover{
+    cursor: pointer;
+}
+.playpause_container:active{
+    transform: scale(1.2);
+}

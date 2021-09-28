@@ -1,13 +1,13 @@
-import classes from './Card.module.css'
+import style from './Card.module.css'
 
-function Card (props){
-    return (<div className={classes.card}>
-        <div className={classes.card__content}>
-            <h4>{props.title}</h4>
+import React from 'react'
+
+function Card(props) {
+    return (
+        <div className={style.card_container}>
             {props.children}
         </div>
-    </div>)
+    )
 }
 
-
-export default Card;
+export default Card

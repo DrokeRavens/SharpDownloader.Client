@@ -4,14 +4,8 @@ body {
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(45deg, #335A95, #1A0123);
+  background: #0F0F10;
   background-repeat: no-repeat;
   background-attachment: fixed;
-}
-
-main{
-  margin-top: 75px;
-  margin-left: 75px;
-  margin-right: 10px;
-  display: flex;
+  color: #fff;
 }
