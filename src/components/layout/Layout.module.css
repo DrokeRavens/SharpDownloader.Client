@@ -1,0 +1,19 @@
+.layout_container img{
+    margin-bottom: 80px;
+}
+
+.layout_container .nav_link{
+    text-decoration: none;
+    color:white;
+    display: flex;
+    margin:auto;
+    width: 70%;
+    margin-bottom: 30px;
+    transition: ease-in-out 400ms;
+}
+
+.layout_container .nav_link span{
+    align-self: center;
+    padding-left: 10px;
+    font-weight: lighter;
+}

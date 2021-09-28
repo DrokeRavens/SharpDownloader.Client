@@ -1,0 +1,8 @@
+.card_container{
+    padding: 10px;
+    background-color: #2D2E2E;
+    display: flex;
+    border-radius: 10px;
+    min-width: 100px;
+    margin-bottom: 10px;
+}

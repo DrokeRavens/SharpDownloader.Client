@@ -1,13 +1,13 @@
 import Layout from './components/layout/Layout'
 import { Route, Switch} from 'react-router-dom'
-import Home from './pages/Home';
+import AllDownloads from './pages/AllDownloads';
 
 function App() {
   return (
     <Layout>
       <Switch>
         <Route path='/' exact>
-          <Home/>
+          <AllDownloads />
         </Route>
       </Switch>
     </Layout>
