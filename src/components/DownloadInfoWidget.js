@@ -36,7 +36,7 @@ function DownloadInfoWidget({title,
                         </div>
                     </div>
                     <Text size={11} fontWeight="bolder">{`${currentSize} of ${totalSize}`}</Text>
-                    <ProgressBar progressbarSize="100%" />
+                    <ProgressBar progressbarSize="100%" progress={progress}/>
                 </div>
                 
             </Card>

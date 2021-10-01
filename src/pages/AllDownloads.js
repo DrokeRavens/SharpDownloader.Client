@@ -1,43 +1,83 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import React from 'react'
 import DownloadInfoWidget from '../components/DownloadInfoWidget'
-const mock_data = [
-    {
-        id: 0,
-        name: 'manjaro_linux_x64.iso',
-        path: '/bin/etc/downloads',
-        currentSize: '1.0 GiB',
-        totalSize: '4.1 GiB',
-        currentSpeed: '90 Mb/s',
-        remainingTime: '15 min',
-        progress: 10,
-        paused: false
-    },
-    {
-        id: 1,
-        name: 'manjaro_linux_x64.iso',
-        path: '/bin/etc/downloads',
-        currentSize: '1.0 GiB',
-        totalSize: '4.1 GiB',
-        currentSpeed: '90 Mb/s',
-        remainingTime: '15 min',
-        progress: 80,
-        paused: true
-    },
-
-]
+import update from 'immutability-helper';
 function AllDownloads() {
+    const websocket = useMemo(() => new WebSocket('ws://localhost:5000/ws'), [])
+    var identity = '';
+    const [downloads, setDownloads] = useState(null);
+    const sndCommands = {
+        DownloadList: 1,
+        DownloadProgress: 2
+    }
+    const rcvCommands = {
+        Identity: 3,
+        DownloadList: 1,
+        DownloadProgress: 2
+    }
 
-    const [socket, setSocket] = useState(null);
+    const getDownloads = () => {
+        console.log(identity);
+        if(websocket){
+            websocket.send(JSON.stringify({
+                PacketType: sndCommands.DownloadList,
+                Id: identity
+            }));
+        }
+    };
+
+    const getProgress = () => {
+        console.log(identity);
+        if(websocket){
+            websocket.send(JSON.stringify({
+                PacketType: sndCommands.DownloadProgress,
+                Id: identity
+            }));
+        }
+    };
+
+    const updateProgress = (data) => {
+        var commentIndex = downloads.findIndex(function(c) { 
+            return c.Id === data.Id; 
+        });
+
+        var updatedComment = update(downloads[commentIndex], {Progress: {$set: data.Progress}}); 
+        
+        var newData = update(downloads, {
+            $splice: [[commentIndex, 1, updatedComment]]
+        });
+        setDownloads(newData);
+    }
+
+    const startup = () => {
+        websocket.onopen = () => {
+            console.log('connected');
+        }
+
+        websocket.onmessage = (payload) => {
+            var jsonData = JSON.parse(payload.data);
+
+            switch(jsonData.PacketType){
+                case rcvCommands.Identity:
+                    identity = jsonData.PacketData.Id;
+                    getDownloads();
+                    break;
+                case rcvCommands.DownloadList:
+                    setDownloads(jsonData.PacketData);
+                    getProgress();
+                    break;
+                case rcvCommands.DownloadProgress:
+                    updateProgress(jsonData.PacketData);
+                    break;
+                default:
+                    console.log('unknown:' + jsonData);
+            }
+        }
+    }
 
     useEffect(() => {
-        const websocket = new WebSocket('ws://localhost:5000/ws')
-        websocket.onopen = () => {
-            websocket.send({
-                ola: "wee"
-            })
-        }
-        setSocket(websocket);
-    }, [setSocket]);
+        startup();
+    })
 
     const selectedItens = []
     function checkHandler(e){
@@ -54,21 +94,21 @@ function AllDownloads() {
 
     return (
         <div style={{width: "100%"}}>
-            {mock_data.map((data) => 
+            {
+                downloads ? downloads.map((data) => 
                 <DownloadInfoWidget 
-                title={data.name}
-                path={data.path}
-                currentSize={data.currentSize}
-                totalSize={data.totalSize}
-                currentSpeed={data.currentSpeed}
+                title={data.Title}
+                path={data.Path}
+                currentSize={data.CurrentSize}
+                totalSize={data.FileSize}
+                currentSpeed={data.CurrentSpeed}
                 remainingTime={data.remainingTime}
-                progress={data.progress}
-                onCheck={() => checkHandler(data.id)}
-                onPauseResume={() => pauseResumeHandler(data.id)}
-                isPaused={data.paused}
-                />
-            )}
-           {socket ? 'socket' : 'nao socket'}
+                progress={data.Progress}
+                onCheck={() => checkHandler(data.Id)}
+                onPauseResume={() => pauseResumeHandler(data.Id)}
+                isPaused={data.State === 1}
+                />) : null
+            }
         </div>
     )
 }
