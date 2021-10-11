@@ -6,21 +6,18 @@ function AllDownloads() {
     const websocket = useMemo(() => new WebSocket('ws://localhost:5000/ws'), [])
     var identity = '';
     const [downloads, setDownloads] = useState(null);
-    const sndCommands = {
-        DownloadList: 1,
-        DownloadProgress: 2
-    }
     const rcvCommands = {
         Identity: 3,
         DownloadList: 1,
-        DownloadProgress: 2
+        DownloadProgress: 2,
+        NewDownload: 4
     }
 
     const getDownloads = () => {
         console.log(identity);
         if(websocket){
             websocket.send(JSON.stringify({
-                PacketType: sndCommands.DownloadList,
+                PacketType: rcvCommands.DownloadList,
                 Id: identity
             }));
         }
@@ -30,23 +27,33 @@ function AllDownloads() {
         console.log(identity);
         if(websocket){
             websocket.send(JSON.stringify({
-                PacketType: sndCommands.DownloadProgress,
+                PacketType: rcvCommands.DownloadProgress,
                 Id: identity
             }));
         }
     };
-
+    const setNewDownload = (data) => {
+        var newData = update(downloads, {$push: [data]});
+        setDownloads(newData);
+    }
     const updateProgress = (data) => {
         var commentIndex = downloads.findIndex(function(c) { 
             return c.Id === data.Id; 
         });
+        if(downloads[commentIndex] === 'undefined')
+            return;
 
-        var updatedComment = update(downloads[commentIndex], {Progress: {$set: data.Progress}}); 
-        
+        var updatedComment = update(downloads[commentIndex], {
+            Progress: {$set: data.Progress},
+            SizeProgress: {$set: data.SizeProgress},
+            RemainingTime: {$set: data.RemainingTime}
+        }); 
+
         var newData = update(downloads, {
             $splice: [[commentIndex, 1, updatedComment]]
         });
         setDownloads(newData);
+        return;
     }
 
     const startup = () => {
@@ -67,10 +74,16 @@ function AllDownloads() {
                     getProgress();
                     break;
                 case rcvCommands.DownloadProgress:
-                    updateProgress(jsonData.PacketData);
+                    updateProgress(jsonData);
+                    break;
+                case rcvCommands.NewDownload:
+                    setNewDownload(jsonData.PacketData);
+                    break;
+                case rcvCommands.StateChanged:
+                    setNewDownload(jsonData.PacketData);
                     break;
                 default:
-                    console.log('unknown:' + jsonData);
+                    console.log('unknown:' + payload.data);
             }
         }
     }
@@ -93,23 +106,25 @@ function AllDownloads() {
     }
 
     return (
-        <div style={{width: "100%"}}>
-            {
-                downloads ? downloads.map((data) => 
-                <DownloadInfoWidget 
-                title={data.Title}
-                path={data.Path}
-                currentSize={data.CurrentSize}
-                totalSize={data.FileSize}
-                currentSpeed={data.CurrentSpeed}
-                remainingTime={data.remainingTime}
-                progress={data.Progress}
-                onCheck={() => checkHandler(data.Id)}
-                onPauseResume={() => pauseResumeHandler(data.Id)}
-                isPaused={data.State === 1}
-                />) : null
-            }
+        <div className="page_container" style={{width: '100%'}}>
+            <div style={{width: "100%"}}>
+                {
+                    downloads ? downloads.map((data) => 
+                    <DownloadInfoWidget 
+                    title={data.Title}
+                    path={data.Path}
+                    currentSize={data.SizeProgress}
+                    currentSpeed={data.CurrentSpeed}
+                    remainingTime={data.RemainingTime}
+                    progress={data.Progress}
+                    onCheck={() => checkHandler(data.Id)}
+                    onPauseResume={() => pauseResumeHandler(data.Id)}
+                    isPaused={data.State === 1}
+                    />) : null
+                }
+            </div>
         </div>
+        
     )
 }
 

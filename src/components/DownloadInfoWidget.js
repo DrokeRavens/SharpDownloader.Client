@@ -8,7 +8,6 @@ import {RiFile2Fill} from 'react-icons/ri'
 function DownloadInfoWidget({title, 
     path, 
     currentSize, 
-    totalSize, 
     currentSpeed, 
     remainingTime, 
     progress,
@@ -35,7 +34,7 @@ function DownloadInfoWidget({title,
                             <Checkbox onClick={onCheck}/>
                         </div>
                     </div>
-                    <Text size={11} fontWeight="bolder">{`${currentSize} of ${totalSize}`}</Text>
+                    <Text size={11} fontWeight="bolder">{currentSize}</Text>
                     <ProgressBar progressbarSize="100%" progress={progress}/>
                 </div>
                 

@@ -1,0 +1,23 @@
+.select_container 
+{    
+    width:250px;  /* Tamanho final do select */    
+    overflow:hidden; /* Esconde o conteúdo que passar do tamanho especificado */
+    margin: 5px;
+} 
+.select_container  select {      
+    background-color: rgb(34, 34, 34);
+    width: 200px; 
+    height:28px; 
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size:13px; 
+    color:#fff;
+    text-indent: 0.01px; 
+    text-overflow: "";  
+    border:none;
+    border-radius: 5px;
+}
+    select::-ms-expand 
+    {
+        display: none;
+    } 

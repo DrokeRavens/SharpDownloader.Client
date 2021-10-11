@@ -1,0 +1,44 @@
+.input_container{
+    display: block;
+    padding: 1px;
+    margin: 5px;
+}
+
+.input_group{
+    transition:ease-in-out 200ms;
+    display: flex;
+}
+
+.input_group:focus-within{
+    box-shadow: 0px 0px 2px 2px rgb(0, 183, 255);
+    border-radius: 5px;
+}
+
+.input:focus {
+    background-color: none;
+    outline:none;
+}
+.input {
+    height:20px;
+    margin:0;
+    padding-right: 30px;
+    width: 100%;
+    background-color: rgb(34, 34, 34);
+    border:none;
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    color:white;
+    font-family: 'Roboto', sans-serif;
+
+}
+.input_group svg {
+    width:20px;
+    height:20px;
+    color: rgb(167, 167, 167);
+    background-color: rgb(34, 34, 34);
+    padding: 5px;
+    text-align: center;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
