@@ -1,0 +1,29 @@
+.foldernavigator_container{
+    color:white;
+    margin: 5px;
+}
+
+.foldernavigator_container label{
+    margin: 0px;
+    padding: 0;
+}
+
+
+.foldernavigator_container ul{
+    list-style: none;
+    padding: 15px;
+    background-color: rgb(29, 29, 29);
+    border-radius: 5px;
+    margin: 0;
+}
+
+.foldernavigator_container ul li{
+    padding: 5px;
+    transition: all 300ms;
+}
+
+.foldernavigator_container ul li:hover{
+    background-color:rgb(53, 53, 53);
+    border-radius: 5px;
+    cursor: pointer;
+}

@@ -7,6 +7,7 @@ import Select from '../../ui/select/Select';
 import { MdLink } from "react-icons/md";
 import Button from '../../ui/button/Button';
 import axios from "axios";
+import FolderNavigator from '../../foldernavigator/FolderNavigator'
 function Topbar() {
     const api = axios.create({
         baseURL: 'https://localhost:5001'
@@ -19,7 +20,7 @@ function Topbar() {
     function handleSubmit(e){
         console.log('requesting');
         api
-        .post("/download?url=" + formData.url , {})
+        .post("/download/new", {url: formData.url, path: formData.path})
         .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
           });
@@ -28,6 +29,9 @@ function Topbar() {
     }
     function handleUrlChange(e){
         formData.url = e.target.value;
+    }
+    function handlePathChange(e){
+        formData.path = e;
     }
     return (
         <div>
@@ -54,18 +58,7 @@ function Topbar() {
             >
                 <form>        
                     <Input icon={<MdLink /> } label="Url" value={formData.url} onChange={handleUrlChange}/>
-                    <Select 
-                    title="Category"
-                    options={[
-                        {
-                            value: 10,
-                            text: "C:/Favorites"
-                        },
-                        {
-                            value: 20,
-                            text: "C:/downloads"
-                        }
-                    ]}/>
+                    <FolderNavigator onChange={handlePathChange}/>
                     <Button text="Start" type="button" onClick={handleSubmit}></Button>
                 </form>
             </Modal> 

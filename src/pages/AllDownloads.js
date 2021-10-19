@@ -2,8 +2,13 @@ import { useState, useEffect, useMemo } from 'react'
 import React from 'react'
 import DownloadInfoWidget from '../components/DownloadInfoWidget'
 import update from 'immutability-helper';
+import axios from "axios";
 function AllDownloads() {
     const websocket = useMemo(() => new WebSocket('ws://localhost:5000/ws'), [])
+    const api = axios.create({
+        baseURL: 'https://localhost:5001'
+    });
+
     var identity = '';
     const [downloads, setDownloads] = useState(null);
     const rcvCommands = {
@@ -14,7 +19,6 @@ function AllDownloads() {
     }
 
     const getDownloads = () => {
-        console.log(identity);
         if(websocket){
             websocket.send(JSON.stringify({
                 PacketType: rcvCommands.DownloadList,
@@ -24,7 +28,6 @@ function AllDownloads() {
     };
 
     const getProgress = () => {
-        console.log(identity);
         if(websocket){
             websocket.send(JSON.stringify({
                 PacketType: rcvCommands.DownloadProgress,
@@ -36,11 +39,21 @@ function AllDownloads() {
         var newData = update(downloads, {$push: [data]});
         setDownloads(newData);
     }
+    const updateState = (commentIndex) => {
+        var updatedComment = update(downloads[commentIndex], {
+            State: downloads[commentIndex].State === 1 ? {$set: 0} :  {$set: 1}
+        }); 
+
+        var newData = update(downloads, {
+            $splice: [[commentIndex, 1, updatedComment]]
+        });
+        setDownloads(newData);
+    }
     const updateProgress = (data) => {
         var commentIndex = downloads.findIndex(function(c) { 
             return c.Id === data.Id; 
         });
-        if(downloads[commentIndex] === 'undefined')
+        if(typeof downloads[commentIndex] === 'undefined')
             return;
 
         var updatedComment = update(downloads[commentIndex], {
@@ -53,7 +66,6 @@ function AllDownloads() {
             $splice: [[commentIndex, 1, updatedComment]]
         });
         setDownloads(newData);
-        return;
     }
 
     const startup = () => {
@@ -98,20 +110,34 @@ function AllDownloads() {
             selectedItens.pop(e);
         else
             selectedItens.push(e);
-        console.log(selectedItens)
     }
 
-    function pauseResumeHandler(e){
-        console.log(e)
-    }
+    function pauseResumeHandler(id){
+        var commentIndex = downloads.findIndex(function(c) { 
+            return c.Id === id; 
+        });
 
+        if(typeof downloads[commentIndex] === 'undefined')
+            return;
+
+        console.log(downloads[commentIndex].State );
+
+        var path = downloads[commentIndex].State === 1 ? 'resume' : 'pause';
+        api
+        .put(`/download/${path}/${id}` , {})
+        .then((_) => updateState(commentIndex))
+        .catch((err) => {
+                console.error("ops! ocorreu um erro" + err);
+              });
+    }
+    
     return (
         <div className="page_container" style={{width: '100%'}}>
             <div style={{width: "100%"}}>
                 {
                     downloads ? downloads.map((data) => 
                     <DownloadInfoWidget 
-                    title={data.Title}
+                    title={data.FileName}
                     path={data.Path}
                     currentSize={data.SizeProgress}
                     currentSpeed={data.CurrentSpeed}
